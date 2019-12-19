@@ -31,18 +31,17 @@ let mouseDown = false;
 const mouseDownHandler = e => {
   mouseDown = true;
   if(e.button === 0) { //left button
-    if(e.ctrlKey) { //place start
+    if(e.ctrlKey) {
       currentAction = "ctrl";
     }
-    else if(e.altKey) { //place end
+    else if(e.altKey) {
       currentAction = "alt";
     }
-    else {//walls
+    else {
       currentAction = "left";
     }
   }
   else if(e.button === 2){ //right button
-    //delete walls/start/end
     currentAction = "right";
   }
   else mouseDown = false;
@@ -88,7 +87,7 @@ resizeGrid(20);
 
 for(let i = 0; i < 20*20; i++) {
   grid.appendChild(createCell());
-// }
+}
 // const cells = createNodes(20);
 //
 // let k = 0;
