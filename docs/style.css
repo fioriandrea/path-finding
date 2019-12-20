@@ -1,0 +1,69 @@
+body {
+  height: 100vh;
+  margin: 0;
+}
+
+div.mainContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+div.gridContainer {
+  --dim: 500px;
+  height: var(--dim);
+  width: var(--dim);
+  display: grid;
+  grid-gap: 1px;
+  border: 1px solid black;
+}
+
+div.cell {
+  border: 0.5px solid black;
+  background: white;
+}
+
+div.cell.wall {
+  background: black;
+}
+
+div.cell.start {
+  background: blue;
+}
+
+div.cell.end {
+  background: orange;
+}
+
+div.cell.open {
+  background: green;
+}
+
+div.cell.closed {
+  background: red;
+}
+
+div.cell.path {
+  background: purple;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  margin: 10px;
+  text-transform: uppercase;
+  background: none;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.5;
+}
