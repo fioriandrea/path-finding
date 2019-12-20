@@ -110,35 +110,3 @@ const a_star = (start, end) => {
     else clearInterval(timer);
   }, 50);
 }
-
-const bfs = (start, end) => {
-  const queue = [];
-  const set = [];
-  queue.push(start);
-  let timer = window.setInterval(() => {
-    if(!animationStarted) clearInterval(timer);
-
-    if(queue.length > 0) {
-      let current = queue.shift();
-      set.push(current);
-      console.log(current)
-      if(current === end) {
-        clearInterval(timer);
-      }
-
-      let neighbors = current.neighbors;
-      console.log(neighbors);
-      for(let i = 0; i < neighbors.length; i++) {
-        if(!set.includes(neighbors[i]) && !neighbors[i].wall && !queue.includes(neighbors[i])) {
-          neighbors[i].parent = current;
-          queue.push(neighbors[i]);
-        }
-      }
-      set.forEach(e => e.updateView("closed"));
-      generatePath(current).forEach(e => e.updateView("path"));
-    }
-    else {
-      clearInterval(timer);
-    }
-  }, 10);
-}

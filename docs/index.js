@@ -72,10 +72,10 @@ const startButtonClickHandler = e => {
   const end = cells.find(e => e.end);
 
   if(typeof start === "undefined") {
-    alert("You should place a starting point");
+    alert("You should place a starting point (ctrl + mouse left)");
   }
   else if(typeof end === "undefined") {
-    alert("You should place a destination point");
+    alert("You should place a destination point (alt + mouse left)");
   }
   else {
     animationEnded = true;
