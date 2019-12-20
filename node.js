@@ -1,62 +1,144 @@
-const makeFreshNode = (x, y) => {
-  const nodesDivs = document.querySelectorAll(".cell");
-  const nodeDiv = nodesDivs[x + y*Math.sqrt(nodesDivs.length)];
-  return {
-    x,
-    y,
-    wall: nodeDiv.classList.contains("wall"),
-    start: nodeDiv.classList.contains("start"),
-    end: nodeDiv.classList.contains("end"),
-    open: nodeDiv.classList.contains("open"),
-    closed: nodeDiv.classList.contains("closed"),
+class Node {
+  constructor(i, j) {
+    this.i = i;
+    this.j = j;
+
+    const nodesDivs = document.querySelectorAll(".cell");
+    this.dim = Math.sqrt(nodesDivs.length);
+    this.div = nodesDivs[j + i * this.dim];
+
+    this.wall = this.div.classList.contains("wall");
+    this.start = this.div.classList.contains("start");
+    this.end = this.div.classList.contains("end");
+  }
+
+  computeNeighbors(grid) {
+    const n = {i: this.i - 1, j: this.j,};
+    const e = {i: this.i, j: this.j + 1,};
+    const s = {i: this.i + 1, j: this.j,};
+    const w = {i: this.i, j: this.j - 1,};
+
+    const ne = {i: this.i - 1, j: this.j + 1,};
+    const nw = {i: this.i - 1, j: this.j - 1,};
+    const se = {i: this.i + 1, j: this.j + 1,};
+    const sw = {i: this.i + 1, j: this.j - 1,};
+
+    this.neighbors = [n, e, s, w, ne, nw, se, sw]
+      .filter(el => el.i >= 0 && el.j >= 0 && el.i < this.dim && el.j < this.dim && !el.wall)
+      .map(el => grid[el.j + el.i * this.dim]);
+  }
+
+  updateView(type) {
+    this.div.className = `cell ${type}`;
   }
 }
 
-const isNodeValid = node => node.x >= 0 && node.y >= 0;
+const createGrid = () => {
+  const gridDiv = document.querySelectorAll(".cell");
+  const len = Math.sqrt(gridDiv.length);
+  const grid = [];
 
-const createNodes = dim => {
-  const nodes = [];
-  for(let i = 0; i < dim; i++) {
-    for(let j = 0; j < dim; j++) {
-      nodes.push(makeFreshNode(j, i));
+  for(let i = 0; i < len; i++) {
+    for(let j = 0; j < len; j++) {
+      grid.push(new Node(i, j));
     }
   }
 
-  for(let i = 0; i < dim; i++) {
-    for(let j = 0; j < dim; j++) {
-      neighnorth = {x: j, y: i - 1,};
-      neighnorthest = {x: j + 1, y: i - 1,};
-      neighnorthwest = {x: j - 1, y: i - 1,};
-      neighest = {x: j + 1, y: i,};
-      neighovest = {x: j - 1, y: i,};
-      neighsouth = {x: j, y: i + 1,};
-      neighsouthwest = {x: j - 1 , y: i + 1,};
-      nodes[j + dim*i].neighbors = [
-        neighnorth,
-        neighnorthest,
-        neighnorthwest,
-        neighest,
-        neighovest,
-        neighsouth,
-        neighsouthwest
-      ].map(e => isNodeValid(e));
-    }
-  }
+  grid.forEach(e => e.computeNeighbors(grid));
 
-  return nodes;
+  return grid;
 }
 
-const updateView = nodes => { 
-  const nodesDivs = document.querySelectorAll(".cell");
-  for(let i = 0; i < nodes.length; i++) {
-    let type = "";
+const generatePath = node => {
+  let tmp = node;
+  let path = [];
 
-    if(nodes[i].open) type = "open";
-    if(nodes[i].closed) type = "closed";
-    if(nodes[i].wall) type = "wall";
-    if(nodes[i].start) type = "start";
-    if(nodes[i].end) type = "end";
-
-    nodesDivs[i].className = `cell ${type}`;
+  while(typeof tmp.parent !== "undefined") {
+    path.push(tmp);
+    tmp = tmp.parent;
   }
+
+  return path;
+}
+
+const heuristics = (n1, n2) => {
+  return Math.sqrt((n1.i - n2.i)**2 + (n1.j - n2.j)**2);
+}
+
+const findMinCostNode = open => {
+  let min = null;
+  open.forEach(e => min = min === null || min.f > e.f ? e : min);
+  return min;
+}
+
+const a_star = (start, end) => {
+  const closed = new Set();
+  const open = new Set();
+  open.add(start);
+
+  start.g = 0;
+  start.f = start.g + heuristics(start, end);
+
+  let timer = window.setInterval(() => {
+    if(open.size > 0) {
+      let min = findMinCostNode(open);
+      //console.log(min);
+      if(min === end) {
+        clearInterval(timer);
+      }
+      open.delete(min);
+      closed.add(min);
+
+      min.neighbors.forEach(neighbor => {
+        if(!closed.has(neighbor) && !neighbor.wall) {
+          let tentative = min.g + 1;
+          let better = true;
+          if(!open.has(neighbor)) open.add(neighbor);
+          else if(tentative > neighbor.g) better = false;
+
+          if(better) {
+            neighbor.parent = min;
+            neighbor.g = tentative;
+            neighbor.f = neighbor.g + heuristics(neighbor, end);
+          }
+        }
+      });
+      open.forEach(el => el.updateView("open"));
+      closed.forEach(el => el.updateView("closed"));
+      generatePath(min).forEach(e => e.updateView("path"));
+    }
+    else clearInterval(timer);
+  }, 50);
+}
+
+const bfs = (start, end) => {
+  const queue = [];
+  const set = [];
+  queue.push(start);
+  let timer = window.setInterval(() => {
+    if(!animationStarted) clearInterval(timer);
+
+    if(queue.length > 0) {
+      let current = queue.shift();
+      set.push(current);
+      console.log(current)
+      if(current === end) {
+        clearInterval(timer);
+      }
+
+      let neighbors = current.neighbors;
+      console.log(neighbors);
+      for(let i = 0; i < neighbors.length; i++) {
+        if(!set.includes(neighbors[i]) && !neighbors[i].wall && !queue.includes(neighbors[i])) {
+          neighbors[i].parent = current;
+          queue.push(neighbors[i]);
+        }
+      }
+      set.forEach(e => e.updateView("closed"));
+      generatePath(current).forEach(e => e.updateView("path"));
+    }
+    else {
+      clearInterval(timer);
+    }
+  }, 10);
 }

@@ -1,5 +1,7 @@
-const root = document.querySelector(":root");
-const grid = document.querySelector("div.gridContainer");
+let currentAction = "";
+let animationEnded = false;
+let mouseDown = false;
+let dim = 10;
 
 const mouseActions = {
   ctrl(e) {
@@ -24,12 +26,13 @@ const mouseActions = {
   },
 };
 
-let currentAction = "";
-let animationStarted = false;
-let mouseDown = false;
-
 const mouseDownHandler = e => {
   mouseDown = true;
+  if(animationEnded) {
+    document.querySelectorAll(".cell")
+    .forEach(el => el.className = "cell");
+    animationEnded = false;
+  }
   if(e.button === 0) { //left button
     if(e.ctrlKey) {
       currentAction = "ctrl";
@@ -47,7 +50,6 @@ const mouseDownHandler = e => {
   else mouseDown = false;
 
   if(!e.target.classList.contains("cell")) return;
-  if(animationStarted) return;
   if(!mouseDown) return;
 
   mouseActions[currentAction](e);
@@ -59,16 +61,31 @@ const mouseUpHandler = e => {
 
 const mouseMoveHandler = e => {
   if(!e.target.classList.contains("cell")) return;
-  if(animationStarted) return;
   if(!mouseDown) return;
 
   mouseActions[currentAction](e);
 }
 
-const setEvents = () => {
-  root.addEventListener("mouseup", mouseUpHandler);
-  root.addEventListener("mousemove", mouseMoveHandler);
-  root.addEventListener("mousedown", mouseDownHandler);
+const startButtonClickHandler = e => {
+  const cells = createGrid();
+  const start = cells.find(e => e.start);
+  const end = cells.find(e => e.end);
+
+  if(typeof start === "undefined") {
+    alert("You should place a starting point");
+  }
+  else if(typeof end === "undefined") {
+    alert("You should place a destination point");
+  }
+  else {
+    animationEnded = true;
+    a_star(start, end);
+  }
+}
+
+const resetButtonClickHandler = e => {
+  document.querySelectorAll(".cell")
+  .forEach(el => el.className = "cell");
 }
 
 const createCell = () => {
@@ -78,28 +95,38 @@ const createCell = () => {
 }
 
 const resizeGrid = dim => {
+  const grid = document.querySelector("div.gridContainer");
   grid.style["grid-template-rows"] = `repeat(${dim}, 1fr)`;
   grid.style["grid-template-columns"] = `repeat(${dim}, 1fr)`;
 }
 
-setEvents();
-resizeGrid(20);
-
-for(let i = 0; i < 20*20; i++) {
-  grid.appendChild(createCell());
+const wheelHandler = e => {
+  const grid = document.querySelector("div.gridContainer");
+  if(e.deltaY > 0 && dim + 1 <= 45) dim++;
+  else if(e.deltaY < 0 && dim - 1 >= 5) dim--;
+  grid.innerHTML = "";
+  resizeGrid(dim);
+  for(let i = 0; i < dim*dim; i++) grid.appendChild(createCell());
 }
-// const cells = createNodes(20);
-//
-// let k = 0;
-//
-// let timer = window.setInterval(function(){
-//     if(k >= 20*20) {
-//       clearInterval(timer);
-//     }
-//     else {
-//       cells[k].wall = true;
-//       if(k%2 === 0) cells[k].end = true;
-//       updateView(cells);
-//       k++;
-//     }
-// }, 20);
+
+const setEvents = () => {
+  const root = document.querySelector(":root");
+  root.addEventListener("mouseup", mouseUpHandler);
+  root.addEventListener("mousemove", mouseMoveHandler);
+  root.addEventListener("mousedown", mouseDownHandler);
+  root.addEventListener("wheel", wheelHandler);
+
+  const startButton = document.querySelector(".startButton");
+  startButton.addEventListener("click", startButtonClickHandler);
+
+  const resetButton = document.querySelector(".resetButton");
+  resetButton.addEventListener("click", resetButtonClickHandler);
+}
+
+
+setEvents();
+resizeGrid(dim);
+
+for(let i = 0; i < dim*dim; i++) {
+  document.querySelector("div.gridContainer").appendChild(createCell());
+}

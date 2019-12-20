@@ -46,7 +46,17 @@ div.cell.closed {
   background: red;
 }
 
-button.startButton {
+div.cell.path {
+  background: purple;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
   margin: 10px;
   text-transform: uppercase;
   background: none;
@@ -54,6 +64,6 @@ button.startButton {
   cursor: pointer;
 }
 
-button.startButton:hover {
+button:hover {
   opacity: 0.5;
 }
