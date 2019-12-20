@@ -1,3 +1,4 @@
+let graphics = new Graphics();
 let currentAction = "";
 let animationEnded = false;
 let mouseDown = false;
@@ -5,40 +6,50 @@ let dim = 10;
 
 const mouseActions = {
   ctrl(e) {
-    const nodesDivs = document.querySelectorAll(".cell");
-    for(let i = 0; i < nodesDivs.length; i++) {
-      nodesDivs[i].classList.remove("start");
-    }
-    e.target.className = "cell start";
-  },
-  alt(e) {
-    const nodesDivs = document.querySelectorAll(".cell");
-    for(let i = 0; i < nodesDivs.length; i++) {
-      nodesDivs[i].classList.remove("end");
-    }
-    e.target.className = "cell end";
+    const i = parseInt(e.target.dataset.i);
+    const j = parseInt(e.target.dataset.j);
+
+    graphics.grid[j + i*dim].reset();
   },
   left(e) {
-    e.target.className = "cell wall";
+    const i = parseInt(e.target.dataset.i);
+    const j = parseInt(e.target.dataset.j);
+
+    graphics.grid[j + i*dim].reset();
+    graphics.grid[j + i*dim].wall = true;
   },
   right(e) {
-    e.target.className = "cell";
+    const i = parseInt(e.target.dataset.i);
+    const j = parseInt(e.target.dataset.j);
+
+    const previousEnd = graphics.grid.find(e => e.end);
+    if(previousEnd) previousEnd.reset();
+    graphics.grid[j + i*dim].reset();
+    graphics.grid[j + i*dim].end = true;
   },
+  wheel(e) {
+    const i = parseInt(e.target.dataset.i);
+    const j = parseInt(e.target.dataset.j);
+
+    const previousStart = graphics.grid.find(e => e.start);
+    if(previousStart) previousStart.reset();
+    graphics.grid[j + i*dim].reset();
+    graphics.grid[j + i*dim].start = true;
+  }
 };
 
 const mouseDownHandler = e => {
   mouseDown = true;
   if(animationEnded) {
-    document.querySelectorAll(".cell")
-    .forEach(el => el.className = "cell");
+    graphics.resetGrid(dim);
     animationEnded = false;
   }
   if(e.button === 0) { //left button
     if(e.ctrlKey) {
       currentAction = "ctrl";
     }
-    else if(e.altKey) {
-      currentAction = "alt";
+    else if(e.altKey) { // same action as wheel key
+      currentAction = "wheel";
     }
     else {
       currentAction = "left";
@@ -46,6 +57,9 @@ const mouseDownHandler = e => {
   }
   else if(e.button === 2){ //right button
     currentAction = "right";
+  }
+  else if(e.button === 1){ //wheel button
+    currentAction = "wheel";
   }
   else mouseDown = false;
 
@@ -67,15 +81,14 @@ const mouseMoveHandler = e => {
 }
 
 const startButtonClickHandler = e => {
-  const cells = createGrid();
-  const start = cells.find(e => e.start);
-  const end = cells.find(e => e.end);
+  const start = graphics.grid.find(e => e.start);
+  const end = graphics.grid.find(e => e.end);
 
   if(typeof start === "undefined") {
-    alert("You should place a starting point");
+    alert("You should place a starting point (mouse wheel button or mouse left button + alt)");
   }
   else if(typeof end === "undefined") {
-    alert("You should place a destination point");
+    alert("You should place a destination point (mouse right button)");
   }
   else {
     animationEnded = true;
@@ -84,29 +97,13 @@ const startButtonClickHandler = e => {
 }
 
 const resetButtonClickHandler = e => {
-  document.querySelectorAll(".cell")
-  .forEach(el => el.className = "cell");
-}
-
-const createCell = () => {
-  const cell = document.createElement("div");
-  cell.classList.add("cell");
-  return cell;
-}
-
-const resizeGrid = dim => {
-  const grid = document.querySelector("div.gridContainer");
-  grid.style["grid-template-rows"] = `repeat(${dim}, 1fr)`;
-  grid.style["grid-template-columns"] = `repeat(${dim}, 1fr)`;
+  graphics.resetGrid(dim);
 }
 
 const wheelHandler = e => {
-  const grid = document.querySelector("div.gridContainer");
   if(e.deltaY > 0 && dim + 1 <= 45) dim++;
   else if(e.deltaY < 0 && dim - 1 >= 5) dim--;
-  grid.innerHTML = "";
-  resizeGrid(dim);
-  for(let i = 0; i < dim*dim; i++) grid.appendChild(createCell());
+  graphics.resetGrid(dim);
 }
 
 const setEvents = () => {
@@ -123,10 +120,5 @@ const setEvents = () => {
   resetButton.addEventListener("click", resetButtonClickHandler);
 }
 
-
 setEvents();
-resizeGrid(dim);
-
-for(let i = 0; i < dim*dim; i++) {
-  document.querySelector("div.gridContainer").appendChild(createCell());
-}
+graphics.resetGrid(dim);

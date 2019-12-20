@@ -1,18 +1,36 @@
+const viewUpdaterFactory = nodeDiv => node => {
+  nodeDiv.className = "cell";
+  if(node.wall) nodeDiv.classList.add("wall");
+  else if(node.start) nodeDiv.classList.add("start");
+  else if(node.end) nodeDiv.classList.add("end");
+
+  if(node.open) nodeDiv.classList.add("open");
+  else if(node.closed) nodeDiv.classList.add("closed");
+
+  if(node.inPath) nodeDiv.classList.add("path");
+}
+
 class Node {
-  constructor(i, j) {
+  constructor(i, j, viewUpdater) {
     this.i = i;
     this.j = j;
-
-    const nodesDivs = document.querySelectorAll(".cell");
-    this.dim = Math.sqrt(nodesDivs.length);
-    this.div = nodesDivs[j + i * this.dim];
-
-    this.wall = this.div.classList.contains("wall");
-    this.start = this.div.classList.contains("start");
-    this.end = this.div.classList.contains("end");
+    this.g = Infinity;
+    this.f = Infinity;
+    this.viewUpdater = viewUpdater;
+    this.neighbors = null;
+    //duplication
+    this.parent = null; //might move view under this stuff
+    this._wall = false; //(trying to update cells not placed)
+    this._start = false;
+    this._end = false;
+    this._open = false;
+    this._closed = false;
+    this._inPath = false;
   }
 
   computeNeighbors(grid) {
+    const dim = Math.sqrt(grid.length);
+
     const n = {i: this.i - 1, j: this.j,};
     const e = {i: this.i, j: this.j + 1,};
     const s = {i: this.i + 1, j: this.j,};
@@ -24,45 +42,94 @@ class Node {
     const sw = {i: this.i + 1, j: this.j - 1,};
 
     this.neighbors = [n, e, s, w, ne, nw, se, sw]
-      .filter(el => el.i >= 0 && el.j >= 0 && el.i < this.dim && el.j < this.dim && !el.wall)
-      .map(el => grid[el.j + el.i * this.dim]);
+      .filter(el => el.i >= 0 && el.j >= 0 && el.i < dim && el.j < dim)
+      .map(el => grid[el.j + el.i*dim]);
   }
 
-  updateView(type) {
-    this.div.className = `cell ${type}`;
-  }
-}
-
-const createGrid = () => {
-  const gridDiv = document.querySelectorAll(".cell");
-  const len = Math.sqrt(gridDiv.length);
-  const grid = [];
-
-  for(let i = 0; i < len; i++) {
-    for(let j = 0; j < len; j++) {
-      grid.push(new Node(i, j));
-    }
+  reset() {
+    this.parent = null;
+    this._wall = false;
+    this._start = false;
+    this._end = false;
+    this._open = false;
+    this._closed = false;
+    this._inPath = false;
+    this.callViewUpdater(this);
   }
 
-  grid.forEach(e => e.computeNeighbors(grid));
-
-  return grid;
-}
-
-const generatePath = node => {
-  let tmp = node;
-  let path = [];
-
-  while(typeof tmp.parent !== "undefined") {
-    path.push(tmp);
-    tmp = tmp.parent;
+  callViewUpdater() {
+    if(this.viewUpdater) this.viewUpdater(this);
   }
 
-  return path;
+  get wall() {
+    return this._wall;
+  }
+
+  get start() {
+    return this._start;
+  }
+
+  get end() {
+    return this._end;
+  }
+
+  get open() {
+    return this._open;
+  }
+
+  get closed() {
+    return this._closed;
+  }
+
+  get inPath() {
+    return this._inPath;
+  }
+
+  set wall(newValue) {
+    this._wall = newValue;
+    this.callViewUpdater();
+  }
+
+  set start(newValue) {
+    this._start = newValue;
+    this.callViewUpdater();
+  }
+
+  set end(newValue) {
+    this._end = newValue;
+    this.callViewUpdater();
+  }
+
+  set open(newValue) {
+    this._open = newValue;
+    this.callViewUpdater();
+  }
+
+  set closed(newValue) {
+    this._closed = newValue;
+    this.callViewUpdater();
+  }
+
+  set inPath(newValue) {
+    this._inPath = newValue;
+    this.callViewUpdater();
+  }
 }
 
 const heuristics = (n1, n2) => {
   return Math.sqrt((n1.i - n2.i)**2 + (n1.j - n2.j)**2);
+}
+
+const getPath = node => {
+  let tmp = node;
+  let path = [];
+
+  while(tmp.parent !== null) {
+    path.push(tmp);
+    tmp = tmp.parent;
+  }
+  //console.log(path);
+  return path;
 }
 
 const findMinCostNode = open => {
@@ -71,10 +138,11 @@ const findMinCostNode = open => {
   return min;
 }
 
-const a_star = (start, end) => {
+const a_star = (start, end, speed=50) => {
   const closed = new Set();
   const open = new Set();
   open.add(start);
+  start.open = true;
 
   start.g = 0;
   start.f = start.g + heuristics(start, end);
@@ -84,16 +152,22 @@ const a_star = (start, end) => {
       let min = findMinCostNode(open);
       //console.log(min);
       if(min === end) {
+        getPath(end).forEach(n => n.inPath = true);
         clearInterval(timer);
       }
       open.delete(min);
       closed.add(min);
+      min.open = false;
+      min.closed = true;
 
       min.neighbors.forEach(neighbor => {
         if(!closed.has(neighbor) && !neighbor.wall) {
           let tentative = min.g + 1;
           let better = true;
-          if(!open.has(neighbor)) open.add(neighbor);
+          if(!open.has(neighbor)) {
+            open.add(neighbor);
+            neighbor.open = true;
+          }
           else if(tentative > neighbor.g) better = false;
 
           if(better) {
@@ -103,10 +177,7 @@ const a_star = (start, end) => {
           }
         }
       });
-      open.forEach(el => el.updateView("open"));
-      closed.forEach(el => el.updateView("closed"));
-      generatePath(min).forEach(e => e.updateView("path"));
     }
     else clearInterval(timer);
-  }, 50);
+  }, speed);
 }
