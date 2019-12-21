@@ -109,7 +109,7 @@ const startButtonClickHandler = e => {
 }
 
 const resetButtonClickHandler = e => {
-  graphics.hardResetGrid(dim);
+  graphics.standardResetGrid(dim);
 }
 
 const wheelHandler = e => {
