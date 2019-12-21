@@ -17,7 +17,6 @@ class Node {
     this.g = Infinity;
     this.f = Infinity;
     this.viewUpdater = viewUpdater;
-    this.neighbors = null;
     //duplication
     this.parent = null; //might move view under this stuff
     this._wall = false; //(trying to update cells not placed)
@@ -26,24 +25,6 @@ class Node {
     this._open = false;
     this._closed = false;
     this._inPath = false;
-  }
-
-  computeNeighbors(grid) {
-    const dim = Math.sqrt(grid.length);
-
-    const n = {i: this.i - 1, j: this.j,};
-    const e = {i: this.i, j: this.j + 1,};
-    const s = {i: this.i + 1, j: this.j,};
-    const w = {i: this.i, j: this.j - 1,};
-
-    const ne = {i: this.i - 1, j: this.j + 1,};
-    const nw = {i: this.i - 1, j: this.j - 1,};
-    const se = {i: this.i + 1, j: this.j + 1,};
-    const sw = {i: this.i + 1, j: this.j - 1,};
-
-    this.neighbors = [n, e, s, w, ne, nw, se, sw]
-      .filter(el => el.i >= 0 && el.j >= 0 && el.i < dim && el.j < dim)
-      .map(el => grid[el.j + el.i*dim]);
   }
 
   reset() {
@@ -116,6 +97,26 @@ class Node {
   }
 }
 
+const computeNeighbors = (grid, node) => {
+  const dim = Math.sqrt(grid.length);
+
+  const n = {i: node.i - 1, j: node.j,};
+  const e = {i: node.i, j: node.j + 1,};
+  const s = {i: node.i + 1, j: node.j,};
+  const w = {i: node.i, j: node.j - 1,};
+
+  const ne = {i: node.i - 1, j: node.j + 1,};
+  const nw = {i: node.i - 1, j: node.j - 1,};
+  const se = {i: node.i + 1, j: node.j + 1,};
+  const sw = {i: node.i + 1, j: node.j - 1,};
+
+  return [n, e, s, w, ne, nw, se, sw]
+        .filter(el => el.i >= 0 && el.j >= 0 && el.i < dim && el.j < dim)
+        .map(el => grid[el.j + el.i*dim])
+        .filter(el => !el.wall &&
+          !grid[node.j + el.i*dim].wall && !grid[el.j + node.i*dim].wall);
+}
+
 const heuristics = (n1, n2) => {
   return Math.sqrt((n1.i - n2.i)**2 + (n1.j - n2.j)**2);
 }
@@ -138,7 +139,7 @@ const findMinCostNode = open => {
   return min;
 }
 
-const a_star = (start, end, speed=50) => {
+const a_star = (grid, start, end, speed=40) => {
   const closed = new Set();
   const open = new Set();
   open.add(start);
@@ -160,8 +161,8 @@ const a_star = (start, end, speed=50) => {
       min.open = false;
       min.closed = true;
 
-      min.neighbors.forEach(neighbor => {
-        if(!closed.has(neighbor) && !neighbor.wall) {
+      computeNeighbors(grid, min).forEach(neighbor => {
+        if(!closed.has(neighbor)) {
           let tentative = min.g + 1;
           let better = true;
           if(!open.has(neighbor)) {

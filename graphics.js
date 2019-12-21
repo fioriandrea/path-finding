@@ -31,7 +31,5 @@ class Graphics {
         this.gridContainer.appendChild(cellDiv);
       }
     }
-
-    this.grid.forEach(c => c.computeNeighbors(this.grid));
   }
 }

@@ -92,7 +92,7 @@ const startButtonClickHandler = e => {
   }
   else {
     animationEnded = true;
-    a_star(start, end);
+    a_star(graphics.grid, start, end);
   }
 }
 
