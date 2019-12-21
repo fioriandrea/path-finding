@@ -17,12 +17,11 @@ div.gridContainer {
   height: var(--dim);
   width: var(--dim);
   display: grid;
-  grid-gap: 1px;
   border: 1px solid black;
 }
 
 div.cell {
-  border: 0.5px solid black;
+  border: 1px solid black;
   background: white;
 }
 

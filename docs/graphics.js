@@ -23,13 +23,15 @@ class Graphics {
     this.grid = [];
 
     for(let i = 0; i < dim; i++) {
+      const row = [];
       for(let j = 0; j < dim; j++) {
         const cellDiv = this.createNodeDiv(i, j);
         const viewUpdater = viewUpdaterFactory(cellDiv);
         const node = new Node(i, j, viewUpdater);
-        this.grid.push(node);
+        row.push(node);
         this.gridContainer.appendChild(cellDiv);
       }
+      this.grid.push(row);
     }
   }
 }
