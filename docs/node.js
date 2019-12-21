@@ -18,8 +18,8 @@ class Node {
     this.f = Infinity;
     this.viewUpdater = viewUpdater;
     //duplication
-    this.parent = null; //might move view under this stuff
-    this._wall = false; //(trying to update cells not placed)
+    this.parent = null; 
+    this._wall = false;
     this._start = false;
     this._end = false;
     this._open = false;
@@ -36,6 +36,14 @@ class Node {
     this._closed = false;
     this._inPath = false;
     this.callViewUpdater(this);
+  }
+
+  graphDataReset() {
+    this.parent = null;
+    this._open = false;
+    this._closed = false;
+    this._inPath = false;
+    this.callViewUpdater();
   }
 
   callViewUpdater() {
@@ -68,26 +76,44 @@ class Node {
 
   set wall(newValue) {
     this._wall = newValue;
+    if(newValue) {
+      this._start = false;
+      this._end = false;
+    }
     this.callViewUpdater();
   }
 
   set start(newValue) {
     this._start = newValue;
+    if(newValue) {
+      this._wall = false;
+      this._end = false;
+    }
     this.callViewUpdater();
   }
 
   set end(newValue) {
     this._end = newValue;
+    if(newValue) {
+      this._start = false;
+      this._wall = false;
+    }
     this.callViewUpdater();
   }
 
   set open(newValue) {
     this._open = newValue;
+    if(newValue) {
+      this._closed = false;
+    }
     this.callViewUpdater();
   }
 
   set closed(newValue) {
     this._closed = newValue;
+    if(newValue) {
+      this._open = false;
+    }
     this.callViewUpdater();
   }
 
@@ -127,7 +153,6 @@ const getPath = node => {
     path.push(tmp);
     tmp = tmp.parent;
   }
-  //console.log(path);
   return path;
 }
 
@@ -149,14 +174,12 @@ const a_star = (grid, start, end, speed=10) => {
   let timer = window.setInterval(() => {
     if(open.size > 0) {
       let min = findMinCostNode(open);
-      //console.log(min);
       if(min === end) {
         getPath(end).forEach(n => n.inPath = true);
         clearInterval(timer);
       }
       open.delete(min);
       closed.add(min);
-      min.open = false;
       min.closed = true;
 
       computeNeighbors(grid, min).forEach(neighbor => {

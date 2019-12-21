@@ -1,6 +1,6 @@
 let graphics = new Graphics();
 let currentAction = "";
-let animationEnded = false;
+let animationStarted = false;
 let mouseDown = false;
 let dim = 10;
 
@@ -14,7 +14,6 @@ const mouseActions = {
   left(e) {
     const i = parseInt(e.target.dataset.i);
     const j = parseInt(e.target.dataset.j);
-
     graphics.grid[i][j].reset();
     graphics.grid[i][j].wall = true;
   },
@@ -49,10 +48,7 @@ const mouseActions = {
 
 const mouseDownHandler = e => {
   mouseDown = true;
-  if(animationEnded) {
-    graphics.resetGrid(dim);
-    animationEnded = false;
-  }
+  graphics.softResetGrid();
   if(e.button === 0) { //left button
     if(e.ctrlKey) {
       currentAction = "ctrl";
@@ -108,19 +104,18 @@ const startButtonClickHandler = e => {
     alert("You should place a destination point (mouse right button)");
   }
   else {
-    animationEnded = true;
     a_star(graphics.grid, start, end);
   }
 }
 
 const resetButtonClickHandler = e => {
-  graphics.resetGrid(dim);
+  graphics.hardResetGrid(dim);
 }
 
 const wheelHandler = e => {
   if(e.deltaY > 0 && dim + 1 <= 75) dim++;
   else if(e.deltaY < 0 && dim - 1 >= 5) dim--;
-  graphics.resetGrid(dim);
+  graphics.hardResetGrid(dim);
 }
 
 const setEvents = () => {
@@ -138,4 +133,4 @@ const setEvents = () => {
 }
 
 setEvents();
-graphics.resetGrid(dim);
+graphics.hardResetGrid(dim);

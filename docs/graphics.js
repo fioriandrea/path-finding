@@ -18,7 +18,15 @@ class Graphics {
     this.gridContainer.style["grid-template-columns"] = `repeat(${dim}, 1fr)`;
   }
 
-  resetGrid(dim) {
+  softResetGrid() {
+    this.grid.forEach(r => r.forEach(cell => cell.graphDataReset()));
+  }
+
+  standardResetGrid() {
+    this.grid.forEach(r => r.forEach(cell => cell.reset()));
+  }
+
+  hardResetGrid(dim) {
     this.resetGridContainer(dim);
     this.grid = [];
 
