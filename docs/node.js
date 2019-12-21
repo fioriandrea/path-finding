@@ -112,7 +112,7 @@ const computeNeighbors = (grid, node) => {
         .filter(el => el.i >= 0 && el.j >= 0 && el.i < dim && el.j < dim)
         .map(el => grid[el.i][el.j])
         .filter(el => !el.wall &&
-          !grid[node.i][el.j].wall && !grid[el.i][node.j].wall);
+          !(grid[node.i][el.j].wall && grid[el.i][node.j].wall));
 }
 
 const heuristics = (n1, n2) => {
