@@ -13,7 +13,7 @@ div.mainContainer {
 }
 
 div.gridContainer {
-  --dim: 500px;
+  --dim: 550px;
   height: var(--dim);
   width: var(--dim);
   display: grid;
