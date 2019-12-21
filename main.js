@@ -9,32 +9,41 @@ const mouseActions = {
     const i = parseInt(e.target.dataset.i);
     const j = parseInt(e.target.dataset.j);
 
-    graphics.grid[j + i*dim].reset();
+    graphics.grid[i][j].reset();
   },
   left(e) {
     const i = parseInt(e.target.dataset.i);
     const j = parseInt(e.target.dataset.j);
 
-    graphics.grid[j + i*dim].reset();
-    graphics.grid[j + i*dim].wall = true;
+    graphics.grid[i][j].reset();
+    graphics.grid[i][j].wall = true;
   },
   right(e) {
     const i = parseInt(e.target.dataset.i);
     const j = parseInt(e.target.dataset.j);
 
-    const previousEnd = graphics.grid.find(e => e.end);
+    let previousEnd;
+    for(let i = 0; i < dim; i++) {
+      previousEnd = graphics.grid[i].find(e => e.end);
+      if(previousEnd) break;
+    }
     if(previousEnd) previousEnd.reset();
-    graphics.grid[j + i*dim].reset();
-    graphics.grid[j + i*dim].end = true;
+    graphics.grid[i][j].reset();
+    graphics.grid[i][j].end = true;
   },
   wheel(e) {
     const i = parseInt(e.target.dataset.i);
     const j = parseInt(e.target.dataset.j);
 
-    const previousStart = graphics.grid.find(e => e.start);
+    let previousStart;
+    for(let i = 0; i < dim; i++) {
+      previousStart = graphics.grid[i].find(e => e.start);
+      if(previousStart) break;
+    }
+    //console.log(previousStart);
     if(previousStart) previousStart.reset();
-    graphics.grid[j + i*dim].reset();
-    graphics.grid[j + i*dim].start = true;
+    graphics.grid[i][j].reset();
+    graphics.grid[i][j].start = true;
   }
 };
 
@@ -81,8 +90,16 @@ const mouseMoveHandler = e => {
 }
 
 const startButtonClickHandler = e => {
-  const start = graphics.grid.find(e => e.start);
-  const end = graphics.grid.find(e => e.end);
+  let start;
+  for(let i = 0; i < dim; i++) {
+    start = graphics.grid[i].find(e => e.start);
+    if(start) break;
+  }
+  let end;
+  for(let i = 0; i < dim; i++) {
+    end = graphics.grid[i].find(e => e.end);
+    if(end) break;
+  }
 
   if(typeof start === "undefined") {
     alert("You should place a starting point (mouse wheel button or mouse left button + alt)");

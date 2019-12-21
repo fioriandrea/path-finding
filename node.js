@@ -98,8 +98,6 @@ class Node {
 }
 
 const computeNeighbors = (grid, node) => {
-  const dim = Math.sqrt(grid.length);
-
   const n = {i: node.i - 1, j: node.j,};
   const e = {i: node.i, j: node.j + 1,};
   const s = {i: node.i + 1, j: node.j,};
@@ -112,9 +110,9 @@ const computeNeighbors = (grid, node) => {
 
   return [n, e, s, w, ne, nw, se, sw]
         .filter(el => el.i >= 0 && el.j >= 0 && el.i < dim && el.j < dim)
-        .map(el => grid[el.j + el.i*dim])
+        .map(el => grid[el.i][el.j])
         .filter(el => !el.wall &&
-          !grid[node.j + el.i*dim].wall && !grid[el.j + node.i*dim].wall);
+          !grid[node.i][el.j].wall && !grid[el.i][node.j].wall);
 }
 
 const heuristics = (n1, n2) => {
