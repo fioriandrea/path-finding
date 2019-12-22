@@ -1,3 +1,16 @@
+const viewUpdaterFactory = nodeDiv => node => {
+  nodeDiv.className = "cell";
+  if(node.wall) nodeDiv.classList.add("wall");
+  else if(node.start) nodeDiv.classList.add("start");
+  else if(node.end) nodeDiv.classList.add("end");
+
+  if(node.open) nodeDiv.classList.add("open");
+  else if(node.closed) nodeDiv.classList.add("closed");
+
+  if(node.inPath) nodeDiv.classList.add("path");
+}
+
+
 class Graphics {
   constructor(grid=[]) {
     this.grid = grid;
