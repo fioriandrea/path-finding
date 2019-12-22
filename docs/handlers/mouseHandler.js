@@ -13,7 +13,6 @@ class MouseHandler {
         self.graphics.softResetGrid();
         const i = parseInt(e.target.dataset.i);
         const j = parseInt(e.target.dataset.j);
-
         self.graphics.grid[i][j].reset();
       },
       left(e) {

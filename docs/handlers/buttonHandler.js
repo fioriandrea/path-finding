@@ -18,6 +18,7 @@ class ButtonHandler {
     if(this.algorithmManager.animationGoing) return;
 
     this.graphics.softResetGrid();
+    
     let start;
     for(let i = 0; i < this.graphics.grid.length; i++) {
       start = this.graphics.grid[i].find(e => e.start);
