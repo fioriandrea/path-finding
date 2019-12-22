@@ -10,7 +10,6 @@ const viewUpdaterFactory = nodeDiv => node => {
   if(node.inPath) nodeDiv.classList.add("path");
 }
 
-
 class Graphics {
   constructor(grid=[]) {
     this.grid = grid;

@@ -1,24 +1,32 @@
 class MouseHandler {
-  constructor(graphics) {
+  constructor(graphics, algorithmManager) {
     this.graphics = graphics;
+    this.algorithmManager = algorithmManager;
     this.currentAction = "";
     this.mouseDown = false;
     this.dim = 10;
     const self = this;
     this.mouseActions = {
       ctrl(e) {
+        if(self.algorithmManager.animationGoing) return;
+
         const i = parseInt(e.target.dataset.i);
         const j = parseInt(e.target.dataset.j);
 
         self.graphics.grid[i][j].reset();
       },
       left(e) {
+        if(self.algorithmManager.animationGoing) return;
+
+        self.graphics.softResetGrid();
         const i = parseInt(e.target.dataset.i);
         const j = parseInt(e.target.dataset.j);
         self.graphics.grid[i][j].reset();
         self.graphics.grid[i][j].wall = true;
       },
       right(e) {
+        if(self.algorithmManager.animationGoing) return;
+
         const i = parseInt(e.target.dataset.i);
         const j = parseInt(e.target.dataset.j);
 
@@ -32,6 +40,8 @@ class MouseHandler {
         self.graphics.grid[i][j].end = true;
       },
       wheel(e) {
+        if(self.algorithmManager.animationGoing) return;
+
         const i = parseInt(e.target.dataset.i);
         const j = parseInt(e.target.dataset.j);
 
@@ -51,7 +61,6 @@ class MouseHandler {
 
   mouseDownHandler(e) {
     this.mouseDown = true;
-    this.graphics.softResetGrid();
     if(e.button === 0) { //left button
       if(e.ctrlKey) {
         this.currentAction = "ctrl";
@@ -89,6 +98,7 @@ class MouseHandler {
   }
 
   wheelHandler(e) {
+    if(this.algorithmManager.animationGoing) return;
     if(e.deltaY > 0 && this.dim + 1 <= 75) this.dim++;
     else if(e.deltaY < 0 && this.dim - 1 >= 5) this.dim--;
     this.graphics.hardResetGrid(this.dim);

@@ -1,13 +1,23 @@
 class ButtonHandler {
-  constructor(graphics) {
+  constructor(graphics, algorithmManager) {
     this.graphics = graphics;
+    this.algorithmManager = algorithmManager;
   }
 
   resetButtonClickHandler(e) {
-    this.graphics.standardResetGrid(this.graphics.grid.length);
+    if(this.algorithmManager.animationGoing) {
+      this.graphics.softResetGrid(this.graphics.grid.length);
+    }
+    else {
+      this.graphics.standardResetGrid(this.graphics.grid.length);
+    }
+    this.algorithmManager.animationGoing = false;
   }
 
   startButtonClickHandler(e) {
+    if(this.algorithmManager.animationGoing) return;
+
+    this.graphics.softResetGrid();
     let start;
     for(let i = 0; i < this.graphics.grid.length; i++) {
       start = this.graphics.grid[i].find(e => e.start);
@@ -26,7 +36,12 @@ class ButtonHandler {
       alert("You should place a destination point (mouse right button)");
     }
     else {
-      a_star(this.graphics.grid, start, end);
+      this.algorithmManager.a_star(this.graphics.grid, start, end);
     }
+  }
+
+  sliderChangeHandler(e) {
+    const period = e.target.value;
+    this.algorithmManager.period = period;
   }
 }
