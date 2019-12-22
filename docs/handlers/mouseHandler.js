@@ -10,6 +10,7 @@ class MouseHandler {
       ctrl(e) {
         if(self.algorithmManager.animationGoing) return;
 
+        self.graphics.softResetGrid();
         const i = parseInt(e.target.dataset.i);
         const j = parseInt(e.target.dataset.j);
 
@@ -27,6 +28,7 @@ class MouseHandler {
       right(e) {
         if(self.algorithmManager.animationGoing) return;
 
+        self.graphics.softResetGrid();
         const i = parseInt(e.target.dataset.i);
         const j = parseInt(e.target.dataset.j);
 
@@ -42,6 +44,7 @@ class MouseHandler {
       wheel(e) {
         if(self.algorithmManager.animationGoing) return;
 
+        self.graphics.softResetGrid();
         const i = parseInt(e.target.dataset.i);
         const j = parseInt(e.target.dataset.j);
 

@@ -40,7 +40,7 @@ class ButtonHandler {
     }
   }
 
-  sliderChangeHandler(e) {
+  sliderChangeHandler(e) { // change class name or move this out
     const period = e.target.value;
     this.algorithmManager.period = period;
   }
