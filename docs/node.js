@@ -18,7 +18,7 @@ class Node {
     this.f = Infinity;
     this.viewUpdater = viewUpdater;
     //duplication
-    this.parent = null; 
+    this.parent = null;
     this._wall = false;
     this._start = false;
     this._end = false;
@@ -141,8 +141,12 @@ const computeNeighbors = (grid, node) => {
           !(grid[node.i][el.j].wall && grid[el.i][node.j].wall));
 }
 
-const heuristics = (n1, n2) => {
+const euclideanDistance = (n1, n2) => {
   return Math.sqrt((n1.i - n2.i)**2 + (n1.j - n2.j)**2);
+}
+
+const heuristics = (n1, n2) => {
+  return euclideanDistance(n1, n2);
 }
 
 const getPath = node => {
@@ -184,7 +188,7 @@ const a_star = (grid, start, end, speed=10) => {
 
       computeNeighbors(grid, min).forEach(neighbor => {
         if(!closed.has(neighbor)) {
-          let tentative = min.g + 1;
+          let tentative = min.g + euclideanDistance(min, neighbor);
           let better = true;
           if(!open.has(neighbor)) {
             open.add(neighbor);
