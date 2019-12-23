@@ -1,6 +1,6 @@
 class EventHandler {
-  constructor(graphics, algorithmAnimationManager) {
-    this.graphics = graphics;
+  constructor(gridViewGenerator, algorithmAnimationManager) {
+    this.gridViewGenerator = gridViewGenerator;
     this.algorithmAnimationManager = algorithmAnimationManager;
     this.currentAction = "";
     this.mouseDown = false;
@@ -59,7 +59,7 @@ class EventHandler {
         self.algorithmAnimationManager.grid[i][j].start = true;
       }
     };
-    this.algorithmAnimationManager.grid = this.graphics.setGrid(this.dim);
+    this.algorithmAnimationManager.grid = this.gridViewGenerator.setUpGrid(this.dim);
   }
 
   mouseDownHandler(e) {
@@ -104,7 +104,7 @@ class EventHandler {
     if(this.algorithmAnimationManager.animationGoing) return;
     if(e.deltaY > 0 && this.dim + 1 <= 75) this.dim++;
     else if(e.deltaY < 0 && this.dim - 1 >= 5) this.dim--;
-    this.algorithmAnimationManager.grid = this.graphics.setGrid(this.dim);
+    this.algorithmAnimationManager.grid = this.gridViewGenerator.setUpGrid(this.dim);
   }
 
   resetButtonClickHandler(e) {

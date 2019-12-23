@@ -1,6 +1,6 @@
-const graphics = new Graphics();
+const gridViewGenerator = new GridViewGenerator();
 const algorithmAnimationManager = new AlgorithmAnimationManager(algorithmsBundle);
-const eventHandler = new EventHandler(graphics, algorithmAnimationManager);
+const eventHandler = new EventHandler(gridViewGenerator, algorithmAnimationManager);
 
 const setEvents = () => {
   const root = document.querySelector(":root");

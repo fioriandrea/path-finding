@@ -10,7 +10,7 @@ const viewUpdaterFactory = nodeDiv => node => {
   if(node.inPath) nodeDiv.classList.add("path");
 }
 
-class Graphics {
+class GridViewGenerator {
   constructor() {
     this.gridContainer = document.querySelector("div.gridContainer");
   }
@@ -29,7 +29,7 @@ class Graphics {
     this.gridContainer.style["grid-template-columns"] = `repeat(${dim}, 1fr)`;
   }
 
-  setGrid(dim) {
+  setUpGrid(dim) {
     this.resetGridContainer(dim);
     const grid = [];
 
