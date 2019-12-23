@@ -1,23 +1,22 @@
 const graphics = new Graphics();
 const algorithmManager = new AlgorithmManager();
-const mouseHandler = new MouseHandler(graphics, algorithmManager);
-const buttonHandler = new ButtonHandler(graphics, algorithmManager);
+const eventHandler = new EventHandler(graphics, algorithmManager);
 
 const setEvents = () => {
   const root = document.querySelector(":root");
-  root.addEventListener("mouseup", e => mouseHandler.mouseUpHandler(e));
-  root.addEventListener("mousemove", e => mouseHandler.mouseMoveHandler(e));
-  root.addEventListener("mousedown", e => mouseHandler.mouseDownHandler(e));
-  root.addEventListener("wheel", e => mouseHandler.wheelHandler(e));
+  root.addEventListener("mouseup", e => eventHandler.mouseUpHandler(e));
+  root.addEventListener("mousemove", e => eventHandler.mouseMoveHandler(e));
+  root.addEventListener("mousedown", e => eventHandler.mouseDownHandler(e));
+  root.addEventListener("wheel", e => eventHandler.wheelHandler(e));
 
   const startButton = document.querySelector(".startButton");
-  startButton.addEventListener("click", e => buttonHandler.startButtonClickHandler(e));
+  startButton.addEventListener("click", e => eventHandler.startButtonClickHandler(e));
 
   const resetButton = document.querySelector(".resetButton");
-  resetButton.addEventListener("click", e => buttonHandler.resetButtonClickHandler(e));
+  resetButton.addEventListener("click", e => eventHandler.resetButtonClickHandler(e));
 
   const slider = document.querySelector(".slider");
-  slider.addEventListener("input", e => buttonHandler.sliderChangeHandler(e))
+  slider.addEventListener("input", e => eventHandler.sliderChangeHandler(e))
 }
 
 setEvents();
