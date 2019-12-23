@@ -1,6 +1,6 @@
 const graphics = new Graphics();
-const algorithmManager = new AlgorithmManager();
-const eventHandler = new EventHandler(graphics, algorithmManager);
+const algorithmAnimationManager = new AlgorithmAnimationManager(algorithmsBundle);
+const eventHandler = new EventHandler(graphics, algorithmAnimationManager);
 
 const setEvents = () => {
   const root = document.querySelector(":root");

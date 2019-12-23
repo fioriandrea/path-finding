@@ -11,8 +11,7 @@ const viewUpdaterFactory = nodeDiv => node => {
 }
 
 class Graphics {
-  constructor(grid=[]) {
-    this.grid = grid;
+  constructor() {
     this.gridContainer = document.querySelector("div.gridContainer");
   }
 
@@ -30,17 +29,9 @@ class Graphics {
     this.gridContainer.style["grid-template-columns"] = `repeat(${dim}, 1fr)`;
   }
 
-  softResetGrid() {
-    this.grid.forEach(r => r.forEach(cell => cell.graphDataReset()));
-  }
-
-  standardResetGrid() {
-    this.grid.forEach(r => r.forEach(cell => cell.reset()));
-  }
-
-  hardResetGrid(dim) {
+  setGrid(dim) {
     this.resetGridContainer(dim);
-    this.grid = [];
+    const grid = [];
 
     for(let i = 0; i < dim; i++) {
       const row = [];
@@ -51,7 +42,8 @@ class Graphics {
         row.push(node);
         this.gridContainer.appendChild(cellDiv);
       }
-      this.grid.push(row);
+      grid.push(row);
     }
+    return grid;
   }
 }

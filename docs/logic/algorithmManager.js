@@ -1,52 +1,35 @@
-class AlgorithmManager {
-  constructor() {
+const algorithmsBundle = {
+  "a_star": (grid, start, end) => new AStar(grid, start, end),
+  "dijkstra": (grid, start, end) => new Dijkstra(grid, start, end),
+};
+
+class AlgorithmAnimationManager {
+  constructor(algorithmsBundle, grid=[]) {
     this.animationGoing = false;
     this.period = 10;
-    this.timer = null;
+    this.grid = grid;
+    this.current = "a_star";
+
+    const self = this;
+    this.algorithmsBundle = algorithmsBundle;
   }
 
-  heuristics(n1, n2) {
-    return euclideanDistance(n1, n2);
+  softResetGrid() {
+    this.grid.forEach(r => r.forEach(cell => cell.graphDataReset()));
+    this.animationGoing = false;
   }
 
-  async a_star(grid, start, end) {
+  standardResetGrid() {
+    this.grid.forEach(r => r.forEach(cell => cell.reset()));
+    this.animationGoing = false;
+  }
+
+  async executeCurrent(start, end) {
     this.animationGoing = true;
-    const closed = new Set();
-    const open = new Set();
-    open.add(start);
-    start.open = true;
-
-    start.g = 0;
-    start.f = start.g + this.heuristics(start, end);
-
-    while(open.size > 0 && this.animationGoing) {
-      let min = findMinCostNode(open);
-      if(min === end) {
-        getPath(end).forEach(n => n.inPath = true);
-        this.animationGoing = false;
-        return;
-      }
-      open.delete(min);
-      closed.add(min);
-      min.closed = true;
-
-      computeNeighbors(grid, min).forEach(neighbor => {
-        if(!closed.has(neighbor)) {
-          let tentative = min.g + euclideanDistance(min, neighbor);
-          let better = true;
-          if(!open.has(neighbor)) {
-            open.add(neighbor);
-            neighbor.open = true;
-          }
-          else if(tentative > neighbor.g) better = false;
-
-          if(better) {
-            neighbor.parent = min;
-            neighbor.g = tentative;
-            neighbor.f = neighbor.g + this.heuristics(neighbor, end);
-          }
-        }
-      });
+    const algo = this.algorithmsBundle[this.current](this.grid, start, end);
+    algo.prelude();
+    while(algo.going && this.animationGoing) {
+      algo.proceed();
       await sleep(this.period);
     }
     this.animationGoing = false;

@@ -25,6 +25,10 @@ const euclideanDistance = (n1, n2) => {
   return Math.sqrt((n1.i - n2.i)**2 + (n1.j - n2.j)**2);
 }
 
+const heuristics = (n1, n2) => {
+  return euclideanDistance(n1, n2);
+}
+
 const getPath = node => {
   let tmp = node;
   let path = [];
