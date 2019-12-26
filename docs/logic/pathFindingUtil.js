@@ -21,12 +21,14 @@ const computeNeighbors = (grid, node) => {
           !(grid[node.i][el.j].wall && grid[el.i][node.j].wall));
 }
 
-const euclideanDistance = (n1, n2) => {
-  return Math.sqrt((n1.i - n2.i)**2 + (n1.j - n2.j)**2);
+const octileDistance = (n1, n2) => {
+  let di = Math.abs(n1.i - n2.i);
+  let dj = Math.abs(n1.j - n2.j);
+  return Math.abs(di - dj) + Math.sqrt(2)*Math.min(di, dj);
 }
 
 const heuristics = (n1, n2) => {
-  return euclideanDistance(n1, n2);
+  return octileDistance(n1, n2);
 }
 
 const getPath = node => {
@@ -42,6 +44,13 @@ const getPath = node => {
 
 const findMinCostNode = open => {
   let min = null;
-  open.forEach(e => min = min === null || min.f > e.f ? e : min);
+  open.forEach(e => {
+    if(min === null || min.f > e.f) {
+      min = e;
+    }
+    else if(min.f === e.f) {
+      min = min.g < e.g ? e : min;
+    }
+  });
   return min;
 }

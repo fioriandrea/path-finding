@@ -30,7 +30,7 @@ class Dijkstra {
 
       computeNeighbors(this.grid, min).forEach(neighbor => {
         if(!this.closed.has(neighbor)) {
-          let tentative = min.f + euclideanDistance(min, neighbor);
+          let tentative = min.f + octileDistance(min, neighbor);
           let better = true;
           if(!this.open.has(neighbor)) {
             this.open.add(neighbor);
