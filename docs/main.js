@@ -1,11 +1,30 @@
 const gridViewGenerator = new GridViewGenerator();
 const algorithmAnimationManager = new AlgorithmAnimationManager(algorithmsBundle);
 const initialDim = 10;
-const machineCoordinator = new MachineCoordinator({
-  gridViewGenerator,
-  algorithmAnimationManager,
-  dim: initialDim,
-});
+
+const makeMouseMachine = () => {
+  return new MouseMachine(makeMouseActions({
+    algorithmAnimationManager,
+  }));
+};
+
+const makeAnimationMachine = (mouseMachine) => {
+  return new AnimationMachine(makeAnimationActions({
+    algorithmAnimationManager,
+    gridViewGenerator,
+    dim: initialDim,
+  }), {
+    "mouseMachine": mouseMachine,
+  });
+};
+
+const mouseMachine = makeMouseMachine();
+const animationMachine = makeAnimationMachine(mouseMachine);
+
+const machines = {
+  mouseMachine: mouseMachine,
+  animationMachine: animationMachine,
+};
 
 algorithmAnimationManager.grid = gridViewGenerator.setUpGrid(initialDim);
 setUpMouseEvents();
@@ -16,31 +35,31 @@ function setUpMouseEvents() {
     if(!e.target.classList.contains("cell")) return;
     if(e.button === 0) { //left button
       if(e.ctrlKey) {
-        machineCoordinator.mouseMachine.execAction("ctrl");
+        machines.mouseMachine.execAction("ctrl");
       }
       else if(e.altKey) { // same action as wheel key
-        machineCoordinator.mouseMachine.execAction("wheel");
+        machines.mouseMachine.execAction("wheel");
       }
       else {
-        machineCoordinator.mouseMachine.execAction("left");
+        machines.mouseMachine.execAction("left");
       }
     }
     else if(e.button === 2){ //right button
-      machineCoordinator.mouseMachine.execAction("right");
+      machines.mouseMachine.execAction("right");
     }
     else if(e.button === 1){ //wheel button
-      machineCoordinator.mouseMachine.execAction("wheel");
+      machines.mouseMachine.execAction("wheel");
     }
-    machineCoordinator.mouseMachine.execAction("move", e.target);
+    machines.mouseMachine.execAction("move", e.target);
   };
 
   const mouseMoveHandler = (e) => {
     if(!e.target.classList.contains("cell")) return;
-    machineCoordinator.mouseMachine.execAction("move", e.target);
+    machines.mouseMachine.execAction("move", e.target);
   };
 
   const mouseUpHandler = (e) => {
-    machineCoordinator.mouseMachine.release();
+    machines.mouseMachine.release();
   };
 
   const root = document.querySelector(":root");
@@ -51,15 +70,15 @@ function setUpMouseEvents() {
 
 function setUpAnimationEvents() {
   const wheelHandler = (e) => {
-    machineCoordinator.animationMachine.execAction("scroll", e.deltaY);
+    machines.animationMachine.execAction("scroll", e.deltaY);
   };
 
   const resetButtonClickHandler = (e) => {
-    machineCoordinator.animationMachine.execAction("reset");
+    machines.animationMachine.execAction("reset");
   };
 
   const startButtonClickHandler = (e) => {
-    machineCoordinator.animationMachine.execAction("start");
+    machines.animationMachine.execAction("start");
   };
 
   const sliderChangeHandler = (e) => {

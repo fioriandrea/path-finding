@@ -1,7 +1,7 @@
 class MouseMachine {
   constructor(actions) {
     this.state = "idle";
-    
+
     const self = this;
     //conditioned
     this.transitions = {
@@ -54,3 +54,50 @@ class MouseMachine {
     }
   }
 }
+
+const makeMouseActions = (extstate) => {
+  return {
+    leftClick: (cell) => {
+      extstate.algorithmAnimationManager.softResetGrid();
+      const i = parseInt(cell.dataset.i);
+      const j = parseInt(cell.dataset.j);
+      extstate.algorithmAnimationManager.grid[i][j].reset();
+      extstate.algorithmAnimationManager.grid[i][j].wall = true;
+    },
+
+    rightClick: (cell) => {
+      extstate.algorithmAnimationManager.softResetGrid();
+      const i = parseInt(cell.dataset.i);
+      const j = parseInt(cell.dataset.j);
+
+      extstate.algorithmAnimationManager.grid
+      .forEach(r => {
+        r.forEach(e => e.end = false);
+      });
+
+      extstate.algorithmAnimationManager.grid[i][j].reset();
+      extstate.algorithmAnimationManager.grid[i][j].end = true;
+    },
+
+    ctrlClick: (cell) => {
+      extstate.algorithmAnimationManager.softResetGrid();
+      const i = parseInt(cell.dataset.i);
+      const j = parseInt(cell.dataset.j);
+      extstate.algorithmAnimationManager.grid[i][j].reset();
+    },
+
+    wheelClick: (cell) => {
+      extstate.algorithmAnimationManager.softResetGrid();
+      const i = parseInt(cell.dataset.i);
+      const j = parseInt(cell.dataset.j);
+
+      extstate.algorithmAnimationManager.grid
+      .forEach(r => {
+        r.forEach(e => e.start = false);
+      });
+
+      extstate.algorithmAnimationManager.grid[i][j].reset();
+      extstate.algorithmAnimationManager.grid[i][j].start = true;
+    },
+  };
+};
