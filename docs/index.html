@@ -8,9 +8,9 @@
   <body oncontextmenu="return false;" ondragstart="return false;" ondrop="return false;">
     <div class="mainContainer">
       <div class="gridContainer"></div>
-      <div class="buttons">
-        <button class="startButton">start</button>
-        <input type="range" list="tickmarks" class="slider" min="10.0" max="100.0" step="10" value="10.0" />
+      <div class="sliderContainer">
+        <input id="slider" type="range" list="tickmarks" class="slider" min="10.0" max="100.0" step="10" value="10.0" />
+        <label for="slider">Update period</label>
         <datalist id="tickmarks">
           <option value="10"></option>
           <option value="20"></option>
@@ -23,6 +23,19 @@
           <option value="90"></option>
           <option value="100"></option>
         </datalist>
+      </div>
+      <div class="algorithmsContainer">
+        <div>
+          <input type="radio" name="algorithm" value="a_star" id="a_star" checked>
+          <label for="a_star">A Star</label>
+        </div>
+        <div>
+          <input type="radio" name="algorithm" value="dijkstra" id="dijkstra">
+          <label for="a_star">Dijkstra</label>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="startButton">start</button>
         <button class="resetButton">reset</button>
       </div>
     </div>

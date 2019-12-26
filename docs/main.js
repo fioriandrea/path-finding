@@ -85,7 +85,14 @@ function setUpAnimationEvents() {
     //outside state machines
     const period = e.target.value;
     algorithmAnimationManager.period = period;
-  }
+  };
+
+  const algoChange = (e) => {
+    //outside state machines
+    if(e.target.checked) {
+      algorithmAnimationManager.current = e.target.value;
+    }
+  };
 
   const startButton = document.querySelector(".startButton");
   startButton.addEventListener("click", startButtonClickHandler);
@@ -98,4 +105,7 @@ function setUpAnimationEvents() {
 
   const root = document.querySelector(":root");
   root.addEventListener("wheel", wheelHandler);
+
+  const radios = document.querySelectorAll(".algorithmsContainer input");
+  radios.forEach(r => r.addEventListener("click", algoChange));
 }
