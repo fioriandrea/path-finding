@@ -1,9 +1,7 @@
 class MouseMachine {
-  constructor(gridViewGenerator, algorithmAnimationManager) {
-    this.algorithmAnimationManager = algorithmAnimationManager;
-    this.gridViewGenerator = gridViewGenerator;
-
+  constructor(actions) {
     this.state = "idle";
+    
     const self = this;
     //conditioned
     this.transitions = {
@@ -16,49 +14,22 @@ class MouseMachine {
       },
       "right": {
         move: (cell) => {
-          self.algorithmAnimationManager.softResetGrid();
-          const i = parseInt(cell.dataset.i);
-          const j = parseInt(cell.dataset.j);
-
-          self.algorithmAnimationManager.grid
-          .forEach(r => {
-            r.forEach(e => e.end = false);
-          });
-
-          self.algorithmAnimationManager.grid[i][j].reset();
-          self.algorithmAnimationManager.grid[i][j].end = true;
+          actions.rightClick(cell);
         },
       },
       "left": {
         move: (cell) => {
-          self.algorithmAnimationManager.softResetGrid();
-          const i = parseInt(cell.dataset.i);
-          const j = parseInt(cell.dataset.j);
-          self.algorithmAnimationManager.grid[i][j].reset();
-          self.algorithmAnimationManager.grid[i][j].wall = true;
+          actions.leftClick(cell);
         },
       },
       "ctrl": {
         move: (cell) => {
-          self.algorithmAnimationManager.softResetGrid();
-          const i = parseInt(cell.dataset.i);
-          const j = parseInt(cell.dataset.j);
-          self.algorithmAnimationManager.grid[i][j].reset();
+          actions.ctrlClick(cell);
         },
       },
       "wheel": {
         move: (cell) => {
-          self.algorithmAnimationManager.softResetGrid();
-          const i = parseInt(cell.dataset.i);
-          const j = parseInt(cell.dataset.j);
-
-          self.algorithmAnimationManager.grid
-          .forEach(r => {
-            r.forEach(e => e.start = false);
-          });
-
-          self.algorithmAnimationManager.grid[i][j].reset();
-          self.algorithmAnimationManager.grid[i][j].start = true;
+          actions.wheelClick(cell);
         },
       },
     };
