@@ -31,7 +31,7 @@ class AStar {
 
       computeNeighbors(this.grid, min).forEach(neighbor => {
         if(!this.closed.has(neighbor)) {
-          let tentative = min.g + euclideanDistance(min, neighbor);
+          let tentative = min.g + 1;
           let better = true;
           if(!this.open.has(neighbor)) {
             this.open.add(neighbor);
