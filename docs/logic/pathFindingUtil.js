@@ -4,21 +4,20 @@ const sleep = ms => {
 
 const computeNeighbors = (grid, node) => {
   const dim = grid.length;
-  const n = {i: node.i - 1, j: node.j,};
-  const e = {i: node.i, j: node.j + 1,};
-  const s = {i: node.i + 1, j: node.j,};
-  const w = {i: node.i, j: node.j - 1,};
+  const neighbors = [];
 
-  const ne = {i: node.i - 1, j: node.j + 1,};
-  const nw = {i: node.i - 1, j: node.j - 1,};
-  const se = {i: node.i + 1, j: node.j + 1,};
-  const sw = {i: node.i + 1, j: node.j - 1,};
+  for(let i = -1; i <= 1; i++) {
+    for(let j = -1; j <= 1; j++) {
+      let ni = i + node.i;
+      let nj = j + node.j;
+      if(!(ni >= 0 && nj >= 0 && ni < dim && nj < dim)) continue;
+      let el = grid[ni][nj];
+      if(el.wall || grid[node.i][el.j].wall && grid[el.i][node.j].wall) continue;
+      neighbors.push(grid[ni][nj]);
+    }
+  }
 
-  return [ne, nw, se, sw, n, e, s, w]
-        .filter(el => el.i >= 0 && el.j >= 0 && el.i < dim && el.j < dim)
-        .map(el => grid[el.i][el.j])
-        .filter(el => !el.wall &&
-          !(grid[node.i][el.j].wall && grid[el.i][node.j].wall));
+  return neighbors;
 }
 
 const octileDistance = (n1, n2) => {
