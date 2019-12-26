@@ -21,6 +21,7 @@ div.gridContainer {
   width: var(--dim);
   display: grid;
   border: 1px solid black;
+  margin-top: 10px;
 }
 
 div.cell {
