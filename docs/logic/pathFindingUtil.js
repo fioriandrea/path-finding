@@ -14,7 +14,7 @@ const computeNeighbors = (grid, node) => {
   const se = {i: node.i + 1, j: node.j + 1,};
   const sw = {i: node.i + 1, j: node.j - 1,};
 
-  return [n, e, s, w, ne, nw, se, sw]
+  return [ne, nw, se, sw, n, e, s, w]
         .filter(el => el.i >= 0 && el.j >= 0 && el.i < dim && el.j < dim)
         .map(el => grid[el.i][el.j])
         .filter(el => !el.wall &&

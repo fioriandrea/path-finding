@@ -33,14 +33,6 @@ div.cell.wall {
   background: black;
 }
 
-div.cell.start {
-  background: blue;
-}
-
-div.cell.end {
-  background: orange;
-}
-
 div.cell.open {
   background: green;
 }
@@ -51,6 +43,14 @@ div.cell.closed {
 
 div.cell.path {
   background: purple;
+}
+
+div.cell.start {
+  background: blue;
+}
+
+div.cell.end {
+  background: orange;
 }
 
 .buttons {

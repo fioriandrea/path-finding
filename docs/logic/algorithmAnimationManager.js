@@ -1,6 +1,7 @@
 const algorithmsBundle = {
   "a_star": (grid, start, end) => new AStar(grid, start, end),
   "dijkstra": (grid, start, end) => new Dijkstra(grid, start, end),
+  "depthFirst": (grid, start, end) => new DepthFirst(grid, start, end),
 };
 
 class AlgorithmAnimationManager {

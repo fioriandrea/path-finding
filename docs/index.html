@@ -31,7 +31,11 @@
         </div>
         <div>
           <input type="radio" name="algorithm" value="dijkstra" id="dijkstra">
-          <label for="a_star">Dijkstra</label>
+          <label for="dijkstra">Dijkstra</label>
+        </div>
+        <div>
+          <input type="radio" name="algorithm" value="depthFirst" id="depthFirst">
+          <label for="depthFirst">DFS</label>
         </div>
       </div>
       <div class="buttons">
@@ -43,6 +47,7 @@
     <script defer src="./logic/pathFindingUtil.js"></script>
     <script defer src="./logic/algorithms/astar.js"></script>
     <script defer src="./logic/algorithms/dijkstra.js"></script>
+    <script defer src="./logic/algorithms/depthFirst.js"></script>
     <script defer src="./logic/algorithmAnimationManager.js"></script>
     <script defer src="./graphics/gridViewGenerator.js"></script>
     <script defer src="./handlers/mouseMachine.js"></script>
