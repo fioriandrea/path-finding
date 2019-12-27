@@ -8,6 +8,7 @@ const computeNeighbors = (grid, node) => {
 
   for(let i = -1; i <= 1; i++) {
     for(let j = -1; j <= 1; j++) {
+      if(i === 0 && j === 0) continue;
       let ni = i + node.i;
       let nj = j + node.j;
       if(!(ni >= 0 && nj >= 0 && ni < dim && nj < dim)) continue;
