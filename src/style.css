@@ -1,0 +1,101 @@
+body {
+  height: 100vh;
+  margin: 0;
+}
+
+div.mainContainer {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+  "slider grid chooser"
+  ". buttons .";
+}
+
+div.gridContainer {
+  grid-area: "grid";
+  --dim: 550px;
+  height: var(--dim);
+  width: var(--dim);
+  display: grid;
+  border: 1px solid black;
+  margin-top: 10px;
+}
+
+div.cell {
+  border: 0.5px solid black;
+  background: white;
+}
+
+div.cell.wall {
+  background: black;
+}
+
+div.cell.open {
+  background: green;
+}
+
+div.cell.closed {
+  background: red;
+}
+
+div.cell.path {
+  background: purple;
+}
+
+div.cell.start {
+  background: blue;
+}
+
+div.cell.end {
+  background: orange;
+}
+
+.buttons {
+  grid-area: buttons;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  margin: 10px;
+  text-transform: uppercase;
+  background: none;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.5;
+}
+
+div.sliderContainer {
+  grid-area: slider;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 10px;
+  place-self: center;
+  padding: 30px;
+}
+
+input.slider {
+  -webkit-appearance: slider-vertical;
+}
+
+div.algorithmsContainer {
+  grid-area: chooser;
+  place-self: center;
+  padding: 30px;
+  border: 1px solid black;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+}
