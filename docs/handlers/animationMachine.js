@@ -75,6 +75,7 @@ const makeAnimationActions = (extstate) => {
     softReset: () => {
       extstate.algorithmAnimationManager.going = false;
       extstate.algorithmAnimationManager.softResetGrid();
+      document.querySelector(".resetButton").textContent = "Reset";
     },
 
     scroll: (deltaY) => {
@@ -106,6 +107,7 @@ const makeAnimationActions = (extstate) => {
         return false;
       }
       else {
+        document.querySelector(".resetButton").textContent = "Stop";
         return true;
       }
     },
@@ -123,6 +125,8 @@ const makeAnimationActions = (extstate) => {
       }
       return extstate.algorithmAnimationManager.executeCurrent(start, end);
     },
-    animationEnd: () => {},
+    animationEnd: () => {
+        document.querySelector(".resetButton").textContent = "Reset";
+    },
   };
 };
