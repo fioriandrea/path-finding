@@ -8,7 +8,7 @@ This project is to allow visualization of some path finding algorithms, such as 
 
 ## Commands
 
-* To place the starting point, press the wheel button or ALT + left mouse button on a cell
+* To place the starting point, press the wheel button or SHIFT + left mouse button on a cell
 * To place the destination point, press the right mouse button on a cell
 * To delete a block, press CTRL + left mouse button on a cell
 * To place a wall, press the left mouse button (and drag it)

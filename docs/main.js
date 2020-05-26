@@ -37,7 +37,7 @@ function setUpMouseEvents() {
       if(e.ctrlKey) {
         machines.mouseMachine.execAction("ctrl");
       }
-      else if(e.altKey) { // same action as wheel key
+      else if(e.shiftKey) { // same action as wheel key
         machines.mouseMachine.execAction("wheel");
       }
       else {
