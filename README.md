@@ -12,3 +12,7 @@ This project is to allow visualization of some path finding algorithms, such as 
 * To place the destination point, press the right mouse button on a cell
 * To delete a block, press CTRL + left mouse button on a cell
 * To place a wall, press the left mouse button (and drag it)
+
+## Examples
+
+![Sample Path](https://github.com/fioriandrea/path_finding/blob/master/example_images/example1.png)
