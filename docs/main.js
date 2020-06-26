@@ -109,3 +109,15 @@ function setUpAnimationEvents() {
   const radios = document.querySelectorAll(".algorithmsContainer input");
   radios.forEach(r => r.addEventListener("click", algoChange));
 }
+
+function gridDimension() {
+  let grd = document.querySelector("div.gridContainer");
+  let dim = Math.max(parseInt(getComputedStyle(grd).height, 10),
+                     parseInt(getComputedStyle(grd).width, 10)) + "px";
+  grd.style.height = dim;
+  grd.style.width = dim
+}
+
+gridDimension();
+
+window.addEventListener("resize", gridDimension);
