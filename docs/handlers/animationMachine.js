@@ -1,3 +1,8 @@
+const setDefaultStartings = (grid) => {
+      grid[0][0].start = true;
+      grid[grid.length - 1][grid[0].length - 1].end = true;
+};
+
 class AnimationMachine {
   constructor(actions, children) {
     this.children = children;
@@ -81,7 +86,7 @@ const makeAnimationActions = (extstate) => {
     scroll: (deltaY) => {
       if(deltaY > 0 && extstate.dim + 1 <= 75) extstate.dim++;
       else if(deltaY < 0 && extstate.dim - 1 >= 5) extstate.dim--;
-      extstate.algorithmAnimationManager.grid = extstate.gridViewGenerator.setUpGrid(extstate.dim);
+      extstate.algorithmAnimationManager.resize(extstate.gridViewGenerator, extstate.dim);
     },
 
     check: () => {

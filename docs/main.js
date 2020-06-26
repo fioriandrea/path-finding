@@ -26,7 +26,7 @@ const machines = {
   animationMachine: animationMachine,
 };
 
-algorithmAnimationManager.grid = gridViewGenerator.setUpGrid(initialDim);
+algorithmAnimationManager.resize(gridViewGenerator, initialDim);
 setUpMouseEvents();
 setUpAnimationEvents();
 

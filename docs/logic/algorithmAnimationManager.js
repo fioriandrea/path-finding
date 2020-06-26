@@ -25,6 +25,12 @@ class AlgorithmAnimationManager {
     this.animationGoing = false;
   }
 
+  resize(gridViewGenerator, dim) {
+    this.grid = gridViewGenerator.setUpGrid(dim);
+    this.grid[0][0].start = true; 
+    this.grid[this.grid.length - 1][this.grid[0].length - 1].end = true; 
+  }
+
   async executeCurrent(start, end) {
     this.animationGoing = true;
     const algo = this.algorithmsBundle[this.current](this.grid, start, end);
