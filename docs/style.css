@@ -67,6 +67,7 @@ button {
   background: none;
   border: 1px solid black;
   cursor: pointer;
+  font-size: 2rem;
 }
 
 button:hover {
@@ -101,7 +102,7 @@ div.algorithmsContainer {
   align-items: left;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 800px) {
   div.sliderContainer {
       visibility: hidden;
   }
