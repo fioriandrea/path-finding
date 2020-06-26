@@ -67,7 +67,7 @@ button {
   background: none;
   border: 1px solid black;
   cursor: pointer;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 button:hover {
@@ -83,7 +83,7 @@ div.sliderContainer {
   border: 1px solid black;
   border-radius: 10px;
   place-self: center;
-  padding: 1.2rem;
+  padding: 0.8rem;
 }
 
 input.slider {
@@ -93,7 +93,7 @@ input.slider {
 div.algorithmsContainer {
   grid-area: chooser;
   place-self: center;
-  padding: 1.2rem;
+  padding: 0.8rem;
   border: 1px solid black;
   border-radius: 10px;
   display: flex;
@@ -102,7 +102,7 @@ div.algorithmsContainer {
   align-items: left;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 900px) {
   div.sliderContainer {
       visibility: hidden;
   }

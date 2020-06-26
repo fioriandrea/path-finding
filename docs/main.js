@@ -144,7 +144,7 @@ function setUpAnimationEvents() {
 
 function gridDimension() {
   let grd = document.querySelector("div.gridContainer");
-  if (window.innerWidth > 800) {
+  if (window.innerWidth > 900) {
     let dim = Math.max(parseInt(getComputedStyle(grd).height, 10),
                        parseInt(getComputedStyle(grd).width, 10)) + "px";
     grd.style.height = dim;
