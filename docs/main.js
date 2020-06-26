@@ -1,6 +1,6 @@
 const gridViewGenerator = new GridViewGenerator();
 const algorithmAnimationManager = new AlgorithmAnimationManager(algorithmsBundle);
-const initialDim = 10;
+const initialDim = 15;
 
 const makeMouseMachine = () => {
   return new MouseMachine(makeMouseActions({
@@ -112,10 +112,15 @@ function setUpAnimationEvents() {
 
 function gridDimension() {
   let grd = document.querySelector("div.gridContainer");
-  let dim = Math.max(parseInt(getComputedStyle(grd).height, 10),
-                     parseInt(getComputedStyle(grd).width, 10)) + "px";
-  grd.style.height = dim;
-  grd.style.width = dim
+  if (window.innerWidth > 700) {
+    let dim = Math.max(parseInt(getComputedStyle(grd).height, 10),
+                       parseInt(getComputedStyle(grd).width, 10)) + "px";
+    grd.style.height = dim;
+    grd.style.width = dim
+  } else {
+    grd.style.width = "80%";
+    grd.style.height = "100%";
+  }
 }
 
 gridDimension();
