@@ -8,26 +8,36 @@ const makeMouseMachine = () => {
   }));
 };
 
-const makeAnimationMachine = (mouseMachine) => {
+const makeTouchMachine = () => {
+    return new TouchMachine(makeTouchActions({
+        algorithmAnimationManager,
+    }));
+};
+
+const makeAnimationMachine = (mouseMachine, touchMachine) => {
   return new AnimationMachine(makeAnimationActions({
     algorithmAnimationManager,
     gridViewGenerator,
     dim: initialDim,
   }), {
     "mouseMachine": mouseMachine,
+    "touchMachine": touchMachine,
   });
 };
 
 const mouseMachine = makeMouseMachine();
-const animationMachine = makeAnimationMachine(mouseMachine);
+const touchMachine = makeTouchMachine();
+const animationMachine = makeAnimationMachine(mouseMachine, touchMachine);
 
 const machines = {
   mouseMachine: mouseMachine,
+  touchMachine: touchMachine,
   animationMachine: animationMachine,
 };
 
 algorithmAnimationManager.resize(gridViewGenerator, initialDim);
 setUpMouseEvents();
+setUpTouchEvents();
 setUpAnimationEvents();
 
 function setUpMouseEvents() {
@@ -66,6 +76,28 @@ function setUpMouseEvents() {
   root.addEventListener("mouseup", mouseUpHandler);
   root.addEventListener("mousemove", mouseMoveHandler);
   root.addEventListener("mousedown", mouseDownHandler);
+}
+
+function setUpTouchEvents() {
+  const touchStartHandler = (e) => {
+    if(!e.target.classList.contains("cell")) return;
+        machines.touchMachine.execAction("touching");
+    machines.touchMachine.execAction("move", e.target);
+  };
+
+  const touchMoveHandler = (e) => {
+    if(!e.target.classList.contains("cell")) return;
+    machines.touchMachine.execAction("move", e.target);
+  };
+
+  const touchEndHandler = (e) => {
+    machines.touchMachine.release();
+  };
+
+  const root = document.querySelector(":root");
+  root.addEventListener("touchStart", touchStartHandler);
+  root.addEventListener("touchmove", touchMoveHandler);
+  root.addEventListener("touchend", touchEndHandler);
 }
 
 function setUpAnimationEvents() {

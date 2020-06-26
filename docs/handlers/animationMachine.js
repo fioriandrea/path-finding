@@ -12,7 +12,7 @@ class AnimationMachine {
       "idle": {
         start: () => {
           actions.start();
-          self.blockChild("mouseMachine");
+          self.blockChildren();
           self.state = "cell_check";
           self.execAction("check");
         },
@@ -32,7 +32,7 @@ class AnimationMachine {
           }
           else {
              self.state = "idle";
-             self.unlockChild("mouseMachine");
+             self.unlockChildren();
           }
         },
       },
@@ -64,8 +64,22 @@ class AnimationMachine {
     this.children[name].block();
   }
 
+  blockChildren() {
+    for (const prop in this.children) {
+        if (this.children.hasOwnProperty(prop))
+            this.blockChild(prop);
+    }
+  }
+
   unlockChild(name) {
     this.children[name].unlock();
+  }
+
+  unlockChildren() {
+    for (const prop in this.children) {
+        if (this.children.hasOwnProperty(prop))
+            this.unlockChild(prop);
+    }
   }
 }
 
