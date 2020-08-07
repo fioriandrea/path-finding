@@ -3,7 +3,7 @@
 This project is to allow visualization of some path finding algorithms, such as A* or Dijkstra Algorithm.
 
 
-[Live version](https://fioriandrea.github.io/path_finding/)
+[Live version](https://fioriandrea.github.io/path-finding/)
 
 
 ## Commands
