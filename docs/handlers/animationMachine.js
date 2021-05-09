@@ -118,7 +118,7 @@ const makeAnimationActions = (extstate) => {
       }
 
       if(typeof start === "undefined") {
-        alert("You should place a starting point (mouse wheel button or mouse left button + alt)");
+        alert("You should place a starting point (mouse wheel button or shift + left mouse button)");
         return false;
       }
       else if(typeof end === "undefined") {
